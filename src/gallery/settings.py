@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     ####### own
-    'store',
-    'members',
+    'store.apps.StoreConfig',
+    'members.apps.MembersConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,7 +130,7 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'store-home'
-LOGIN_URL = 'login'
+LOGIN_URL = '/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #stored in file system, not in the database
 MEDIA_URL = '/media/' #where media will be located in the browser
