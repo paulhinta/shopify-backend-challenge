@@ -1,13 +1,18 @@
 {%extends 'store/base.html' %}
-{% url 'photo-detail' object.pk %}
 
 {% block content %}
   <article class="media content-section">
     <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="#">{{ object.author }}</a>
+        <a class="mr-2" href="{% url 'user-photos' object.author.username %}">{{ object.author }}</a>
         <small class="text-muted">{{ object.date_posted }}</small>
+        {% if object.author == user %}
+          <div>
+            <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-update' object.id %}"> Update Photo.</a>
+            <a class = "btn btn-danger btn-sm" href = "{% url 'photo-delete' object.id %}"> Delete Photo.</a>
+          </div>
+        {% endif %}
       </div>
       <h2 class="article-title">{{ object.title }}</h2>
     </div>
