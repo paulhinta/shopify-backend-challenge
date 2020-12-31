@@ -38,19 +38,14 @@ class Photo(models.Model):
         super().save()
 
         th  = Image.open(self.pic.path)
+        th.thumbnail((300,300))
 
-        if th.height > 300 or th.width > 300:
-            th.thumbnail((300,300))
-        
-        #th.save(str(os.path.join(settings.MEDIA_ROOT, 'thumbnails', str(self.pic))))
+        #if th.height > 300 or th.width > 300:
+        #    th.thumbnail((300,300))
 
         blob = BytesIO()
         th.save(blob, 'JPEG')  
         self.thumbnail.save(str(self.pic), ContentFile(blob.getvalue()), save=False) 
-        #th_path = str(os.path.join(settings.MEDIA_ROOT, 'thumbnails'))
-        #th_name = os.path.join(settings.MEDIA_ROOT, 'thumbnails', str(self.pic))
-        #print(th_name)
-        #self.thumbnail(th_path, File(th_name).read())
         
         print(self.thumbnail)
 
