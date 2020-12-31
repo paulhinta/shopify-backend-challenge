@@ -134,3 +134,5 @@ LOGIN_URL = '/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #stored in file system, not in the database
 MEDIA_URL = '/media/' #where media will be located in the browser
+
+STATIC_URL = "/static/"

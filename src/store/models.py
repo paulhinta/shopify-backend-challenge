@@ -2,11 +2,19 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from PIL import Image, ImageFile
+from django.conf import settings
+from django.core.files.base import ContentFile
+from io import BytesIO
+import os
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # Create your models here.
 class Photo(models.Model):
     title           = models.CharField(max_length=100)
     pic             = models.ImageField(blank=True, upload_to='')
+    thumbnail       = models.ImageField(blank=True, upload_to="thumbnails")
     price           = models.DecimalField(max_digits=1000, decimal_places=2, default=0.01)
     description     = models.TextField(max_length=2500)
     available       = models.BooleanField(default=True)
@@ -26,3 +34,24 @@ class Photo(models.Model):
         Redirect does the work itself
         By using reverse, we are letting the view handle the redirect for us instead of the server
     '''
+    def save(self, *args, **kwargs): #overriding the save function in order to rescale images (save space, etc.)
+        super().save()
+
+        th  = Image.open(self.pic.path)
+
+        if th.height > 300 or th.width > 300:
+            th.thumbnail((300,300))
+        
+        #th.save(str(os.path.join(settings.MEDIA_ROOT, 'thumbnails', str(self.pic))))
+
+        blob = BytesIO()
+        th.save(blob, 'JPEG')  
+        self.thumbnail.save(str(self.pic), ContentFile(blob.getvalue()), save=False) 
+        #th_path = str(os.path.join(settings.MEDIA_ROOT, 'thumbnails'))
+        #th_name = os.path.join(settings.MEDIA_ROOT, 'thumbnails', str(self.pic))
+        #print(th_name)
+        #self.thumbnail(th_path, File(th_name).read())
+        
+        print(self.thumbnail)
+
+        super(Photo, self).save(*args, **kwargs)

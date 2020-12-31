@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #allows us to verify that user is logged in before creating or update a post; can't use a decorator on class-based views
+from PIL import Image
 
 # Create your views here.
 def home(request):
@@ -37,6 +38,8 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        form.instance.thumbnail = None
+
         return super().form_valid(form)
 
 class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
