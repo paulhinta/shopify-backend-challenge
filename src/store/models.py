@@ -6,7 +6,7 @@ from django.urls import reverse
 # Create your models here.
 class Photo(models.Model):
     title           = models.CharField(max_length=100)
-    pic             = models.ImageField(blank=True)
+    pic             = models.ImageField(blank=True, upload_to='')
     price           = models.DecimalField(max_digits=1000, decimal_places=2, default=0.01)
     description     = models.TextField(max_length=2500)
     available       = models.BooleanField(default=True)
