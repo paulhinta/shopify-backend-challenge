@@ -68,6 +68,7 @@ a.article-title:hover {
 
 .article-content {
   white-space: pre-line;
+  max-height: 100px;
 }
 
 .article-img {
@@ -102,4 +103,10 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

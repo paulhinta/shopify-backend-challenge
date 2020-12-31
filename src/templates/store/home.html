@@ -3,13 +3,17 @@
     {% for post in photos %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-          <div class="media-body">
+          <div class ="gallery" style = "float:left">
+              <img src="{{ post.thumbnail.url }}">
+          </div>
+          <div class="media-body" style = "float:right">
             <div class="article-metadata">
               <a class="mr-2" href="{% url 'user-photos' post.author.username %}">{{ post.author }}</a>
               <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
             </div>
             <h2><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
+            <h3> Price: {{ post.price }}</h3>
+            <p class="article-content" style="overflow: hidden; text-overflow: ellipsis;">{{ post.description }}</p>
           </div>
         </article>
     {% endfor %}
