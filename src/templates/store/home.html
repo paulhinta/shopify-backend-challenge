@@ -2,17 +2,19 @@
 {% block content %}
     {% for post in photos %}
         <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-          <div class ="gallery" style = "float:left">
-              <img src="{{ post.thumbnail.url }}">
-          </div>
+            <div class = "gallery">
+                <section class ="photo_gallery">
+                    <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+                </section>
+            </div>
           <div class="media-body" style = "float:right">
             <div class="article-metadata">
+              <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
               <a class="mr-2" href="{% url 'user-photos' post.author.username %}">{{ post.author }}</a>
               <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
             </div>
-            <h2><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></h2>
-            <h3> Price: {{ post.price }}</h3>
+            <h3><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></h3>
+            <h6><a class="article-content" href="{% url 'photo-details' post.id %}">Price: {{ post.price }}</a></h6>
             <p class="article-content" style="overflow: hidden; text-overflow: ellipsis;">{{ post.description }}</p>
           </div>
         </article>

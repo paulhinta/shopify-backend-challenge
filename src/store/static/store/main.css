@@ -2,7 +2,7 @@ div.gallery {
   margin: 5px;
   border: 1px solid #ccc;
   float: left;
-  width: 180px;
+  width: 200px;
 }
 
 div.gallery:hover {
@@ -110,3 +110,20 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.photo_gallery {
+  display: flex;    
+}
+
+.photo_gallery a {
+      display: inline-block;
+      height: 200px;
+      width: 200px;
+  }
+
+.photo_gallery img {
+      object-position: center;
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+  }
