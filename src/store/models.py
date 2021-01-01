@@ -28,6 +28,9 @@ class Photo(models.Model):
     def get_absolute_url(self):
         return reverse('photo-details', kwargs={'pk': self.pk})
 
+    def get_price(self):
+        return self.price
+
     '''
         Get absolute URL allows user to be redirected to the post after creating a new one
         Using reverse > redirect because reverse gives the browser a url as string and browser follows that route

@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 import os
+from django.utils import timezone
+
+from store.models import Photo
 
 # Create your models here.
 class Profile(models.Model):   
@@ -19,3 +22,22 @@ class Profile(models.Model):
         if img.height > 300 or img.width > 300:
             img.thumbnail((300,300))
             img.save(self.image.path)
+
+class Cart(models.Model):
+    user            = models.OneToOneField(User, on_delete=models.CASCADE)
+    items           = models.ManyToManyField(Photo)
+    date_ordered    = models.DateTimeField(default=timezone.now)
+    ordered         = models.BooleanField(default=False)
+
+    def get_cart_items(self):
+        return self.items.all()
+
+    def get_cart_total(self):
+        total = 0
+        for item in self.items:
+            total += item.get_price()
+        return total
+    
+    def __str__(self):
+        name = str(self.user) + "'s cart"
+        return name
