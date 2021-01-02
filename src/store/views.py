@@ -111,10 +111,13 @@ class CartItemsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         qs =  Cart.objects.filter(user = user)
         photos_in_cart = []
+        total = 0
         for c in qs:
             for item in c.items.all():
                 photos_in_cart.append(item)
-        return photos_in_cart
+                total += item.get_price()
+        print({'photos': photos_in_cart, 'price': total})
+        return {'photos': photos_in_cart, 'price': total}
 
 def about(request):
     return render(request, 'store/about.html', {})

@@ -29,7 +29,7 @@ class Photo(models.Model):
         return reverse('photo-details', kwargs={'pk': self.pk})
 
     def get_price(self):
-        return self.price
+        return float(self.price)
 
     def get_id(self):
         return self.pk
