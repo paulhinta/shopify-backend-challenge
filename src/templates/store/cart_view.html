@@ -1,6 +1,22 @@
 {% extends "store/base.html" %}
 {% load extra_store %}
 {% block content %}
-    <h1>{{ cart }}</h1>
-    <h1>{{cart|get_item:'photos'}}</h1>>
+    <h1>{{ view.kwargs.username }}'s Cart (total: ${{cart|get_item:'price'}})</h1>
+        {% for item in cart|get_item:'photos' %}
+        <article class="media content-section">
+            <div class = "media-body">
+                <div style="float: left;">
+                    <section class ="photo_gallery">
+                        <a href="{{ item.pic.url }}"><img src="{{ item.thumbnail.url }}"/></a>
+                    </section>
+                    <h5>{{item.title}} : </h5>
+                    <h6><a href="{% url 'photo-details' item.id %}">See details</a></h6>
+                </div>
+                <div style="float: right">
+                    <h5>{{item.price}}</h5>
+                    <h6><a href="{% url 'photo-details' item.id %}">Remove this item</a></h6>
+                </div>
+            </div>
+        </article>
+    {%endfor%}
 {% endblock content %}
