@@ -31,7 +31,7 @@ class PhotoListView(ListView): #class-based view
     '''
     context_object_name = 'photos' #this is how it's named in the home.html template
     ordering = ["-date_posted"] #allows us to post in reverse chronological order
-    paginate_by = 5
+    paginate_by = 27
 
 class PhotoDetailView(DetailView):
     model = Photo #Photo is the object that we call the view on

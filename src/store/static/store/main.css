@@ -127,3 +127,9 @@ p {
       height: 100%;
       width: 100%;
   }
+
+.clear {
+    clear: both;
+    float: none;
+    width: 100%;
+  }

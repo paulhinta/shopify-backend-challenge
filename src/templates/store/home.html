@@ -1,23 +1,19 @@
 {% extends "store/base.html" %}
 {% block content %}
     {% for post in photos %}
-        <article class="media content-section">
-            <div class = "gallery">
-                <section class ="photo_gallery">
-                    <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
-                </section>
-            </div>
-          <div class="media-body" style = "float:right">
-            <div class="article-metadata">
-              <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-              <a class="mr-2" href="{% url 'user-photos' post.author.username %}">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
-            </div>
-            <h3><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></h3>
-            <h6><a class="article-content" href="{% url 'photo-details' post.id %}">Price: {{ post.price }}</a></h6>
-            <p class="article-content" style="overflow: hidden; text-overflow: ellipsis;">{{ post.description }}</p>
-          </div>
-        </article>
+        <div class = "gallery" style="height: 300px; width:200px">
+          <section class ="photo_gallery">
+              <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+          </section>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-light">
+              <div><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></div>
+              <div><small>By: <a class="article-content" href="{% url 'user-photos' post.author %}">{{ post.author }}</a></small></div>
+              <div>Price: <a class="article-content" href="{% url 'photo-details' post.id %}">{{ post.price }}</a></div>
+            </li>
+            
+          </ul>
+        </div>
     {% endfor %}
     {% if is_paginated %}
 
