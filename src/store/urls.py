@@ -8,7 +8,8 @@ from .views import (
     PhotoDeleteView,
     AllUserPostsView,
     add_to_cart,
-    CartItemsView
+    CartItemsView,
+    remove_from_cart,
 )
 
 urlpatterns = [
@@ -17,6 +18,7 @@ urlpatterns = [
     path('about/', about, name='about-page'),
     path('photo/<int:pk>', PhotoDetailView.as_view(), name='photo-details'),
     path('photo/<int:pk>/add-to-cart', add_to_cart, name='photo-add-to-cart'),
+    path('profile/<str:username>/cart/remove/<int:pk>/', remove_from_cart, name='remove-from-cart'),
     path('profile/<str:username>/cart/', CartItemsView.as_view(), name='cart-view'),
     #pk = primary key (ie. the id of each post)
     path('photo/new', PhotoCreateView.as_view(), name='photo-create'),

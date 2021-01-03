@@ -2,12 +2,22 @@
 
 {% block content %}
   <article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
-    <div class="media-body">
+      <div class = "gallery" style="float:left">
+          <section class ="photo_gallery">
+              <a href="{{ object.pic.url }}"><img src="{{ object.pic.url }}"/></a>
+          </section>
+      </div>
+    <div class="media-body" style = "float:right">
       <div class="article-metadata">
+        <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
         <a class="mr-2" href="{% url 'user-photos' object.author.username %}">{{ object.author }}</a>
-        <small class="text-muted">{{ object.date_posted }}</small>
-        {% if object.author == user %}
+        <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+      </div>
+        <h3><a class="article-title" href="{% url 'photo-details' object.id %}">{{ object.title }}</a></h3>
+        <h6><a class="article-content" href="{% url 'photo-details' object.id %}">Price: {{ object.price }}</a></h6>
+        <small class="article-content">{{ object.description }}</small>
+    </div>
+    {% if object.author == user %}
           <div>
             <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-update' object.id %}"> Update Photo.</a>
             <a class = "btn btn-danger btn-sm" href = "{% url 'photo-delete' object.id %}"> Delete Photo.</a>
@@ -17,9 +27,6 @@
           <div>
             <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' object.id %}">Add to Cart.</a>
           </div>
-        {% endif %}
-      </div>
-      <h2 class="article-title">{{ object.title }}</h2>
-    </div>
-  </article>
+    {% endif %}
+</article>
 {% endblock content %}

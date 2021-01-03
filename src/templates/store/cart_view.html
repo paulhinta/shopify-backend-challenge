@@ -14,7 +14,7 @@
                 </div>
                 <div style="float: right">
                     <h5>{{item.price}}</h5>
-                    <h6><a href="{% url 'photo-details' item.id %}">Remove this item</a></h6>
+                    <h6><a href="{% url 'remove-from-cart' pk=item.id username=view.kwargs.username %}">Remove this item</a></h6>
                 </div>
             </div>
         </article>

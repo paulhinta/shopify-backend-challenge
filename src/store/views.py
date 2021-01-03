@@ -81,9 +81,26 @@ def add_to_cart(request, **kwargs):
     product_id = kwargs['pk']
     product = Photo.objects.filter(id = product_id).first()
     user_cart = Cart.objects.filter(user = user).first()
-    user_cart.items.add(product)
-    messages.success(request, f"Item was added to {user.username}'s cart: {product.title}")
+    if user_cart.items.filter(title=product.title).exists():
+        messages.warning(request, f"Could not add item to your cart, since {product.title} has already been added to the cart.")
+    else:
+        user_cart.items.add(product)
+        messages.success(request, f"Item was added to your cart: {product.title}")
     return HttpResponseRedirect(reverse('photo-details', args=[product_id]))
+
+@login_required
+def remove_from_cart(request, **kwargs):
+    user = request.user
+    product_id = kwargs['pk']
+    product = Photo.objects.filter(id = product_id).first()
+    user_cart = Cart.objects.filter(user = user).first()
+    if user_cart.items.filter(title=product.title).exists():
+        user_cart.items.remove(product)
+        messages.success(request, f"Item was removed from your cart: {product.title}")
+    else:
+        messages.warning(request, f"Item was not found in your cart: {product.title}")
+    return HttpResponseRedirect(reverse('cart-view', args=[user]))
+    
     
 class AllUserPostsView(ListView): #class-based view
     model = Photo
@@ -118,6 +135,7 @@ class CartItemsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 total += item.get_price()
         print({'photos': photos_in_cart, 'price': total})
         return {'photos': photos_in_cart, 'price': total}
+
 
 def about(request):
     return render(request, 'store/about.html', {})
