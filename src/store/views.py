@@ -33,6 +33,16 @@ class PhotoListView(ListView): #class-based view
     ordering = ["-date_posted"] #allows us to post in reverse chronological order
     paginate_by = 27
 
+class PhotoFeaturedView(ListView): #class-based view
+    model = Photo
+    template_name = 'store/featured.html'
+    context_object_name = 'featured'
+    ordering = ["-date_posted"] #allows us to post in reverse chronological order
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Photo.objects.filter(featured=True)
+
 class PhotoDetailView(DetailView):
     model = Photo #Photo is the object that we call the view on
 

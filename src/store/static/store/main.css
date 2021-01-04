@@ -105,12 +105,6 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
-p {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .photo_gallery {
   display: flex;    
 }

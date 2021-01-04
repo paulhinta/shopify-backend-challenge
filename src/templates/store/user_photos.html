@@ -4,15 +4,32 @@
         <h1 class = "mb-3">Posts by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
         {% for post in photos %}
             <article class="media content-section">
-                <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
                 <div class="media-body">
-                <div class="article-metadata">
-                    <a class="mr-2" href="{% url 'user-photos' post.author.username %}">{{ post.author }}</a>
-                    <small class="text-muted">{{ post.date_posted }}</small>
-                </div>
-                <h2><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></h2>
-                <p class="article-content" e>{{ post.description }}</p>
-                </div>
+                    <div class = "gallery">
+                        <section class ="photo_gallery">
+                            <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+                        </section>
+                    </div>
+                    <div>
+                        <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+                        <div class="article-metadata">
+                            <a class="mr-2" href="{% url 'user-photos' post.author.username %}">{{ post.author }}</a>
+                            <small class="text-muted">{{ post.date_posted }}</small>
+                        </div>
+                        <div>
+                            <h2><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></h2>
+                            <p>
+                                <a class="btn btn-info" data-toggle="collapse" href="#{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                  Link with href
+                                </a>
+                            </p>
+                              <div class="collapse" id="{{post.id}}">
+                                <div class="card card-body">
+                                  {{ post.description }}
+                                </div>
+                              </div>
+                        </div>
+                    </div>
             </article>
         {%endfor%}
         {% if is_paginated %}
