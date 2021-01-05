@@ -24,9 +24,13 @@
           </div>
         {% endif %}
         {% if object.author != user %}
-          <div>
-            <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' object.id %}">Add to Cart.</a>
-          </div>
+          {% if object.available == True %}
+            <div>
+              <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' object.id %}">Add to Cart.</a>
+            </div>
+          {% else %}
+            <div>This Photo is currently unavailable for purchase. Please check again later.</div>
+          {%endif%}
     {% endif %}
 </article>
 {% endblock content %}

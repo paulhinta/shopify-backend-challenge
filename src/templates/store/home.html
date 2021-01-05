@@ -9,7 +9,11 @@
             <li class="list-group-item list-group-item-light">
               <div><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></div>
               <div><small>By: <a class="article-content" href="{% url 'user-photos' post.author %}">{{ post.author }}</a></small></div>
-              <div>Price: <a class="article-content" href="{% url 'photo-details' post.id %}">{{ post.price }}</a></div>
+              {% if post.available == False %}
+                <div><a class="article-content" href="{% url 'photo-details' post.id %}">Currently unavailable</a></div>
+              {% else %}
+                <div>Price: <a class="article-content" href="{% url 'photo-details' post.id %}">{{ post.price }}</a></div>
+              {%endif%}
             </li>
             
           </ul>

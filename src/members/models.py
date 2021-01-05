@@ -30,11 +30,14 @@ class Cart(models.Model):
     ordered         = models.BooleanField(default=False)
 
     def get_cart_items(self):
-        return self.items.all()
+        i = []
+        for item in self.items.all():
+            i.append(item)
+        return i
 
     def get_cart_total(self):
         total = 0
-        for item in self.items:
+        for item in self.items.all():
             total += item.get_price()
         return total
     

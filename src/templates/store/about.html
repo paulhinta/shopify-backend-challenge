@@ -1,17 +1,42 @@
 {%extends 'store/base.html' %}
 
 {% block content %}
-    <article class="media content-section">
+    <h1>WELCOME!</h1>
         <div class="article-metadata card card-body">
+            <h3>Instructions</h3>
             <p class="article-content">
                 Hello Shopify team! Thank you for taking the time to review my submission for the backend developer intern role. I'm very excited for you to evaluate my work!
             </p>
-            <p class="article content">
+            <p class="article content-about">
                 On this page I've provided instructions on how this web app works. This app functions as a photo repository as well as a simple marketplace for photos (users can upload and sell pictures). I chose to use the Django framework in Python because I figured that it has a lot of plugins available which would reduce the lines of code in the backend, as well as the fact that I wasn't too comfortable with this framework when I started and I wanted to practice! (Also please note that I spent most of my efforts on the backend because of the job description, I don't have too much experience in UI/UX but I plan on getting there!)
             </p>
-            <small class="article-content">
-                To get started, you can create a username and password (email is required). Then, you can navigate to the home page, where you will see displayed in a 3x27 grid all of the photos on the site, in reverse chronological order.
-            </small>
+            <p class="article-content-about">
+                To get started, you can create a username and password (email is required). Then, you can navigate to the home page, where you will see displayed in a 3x10 grid all of the photos on the site, in reverse chronological order. At any point, you can click the photo name to view details of the photo, or click the username of the user who uploaded the photo to view all photos that that user has uploaded.
+            </p>
+            <p class="article-content-about">
+                Each upload is an instance of the django model "Photo", which can be found under "src/store/models.py". You'll notice that a Photo will have many attributes: </br>
+                - Title </br>
+                - Author (which is the user who uploaded the photo) </br>
+                - Thumbnail (which is a scaled-down version of the photo used in the UI so that the server doesn't have to load larger photos all the time) </br>
+                - Price </br>
+                - Description </br>
+                - Available (which indicates whether or not the Photo is currently listed for purchase) </br>
+                - Featured (which indicates whether the site has decided to feature the Photo on the featured page. In a complete version, the site would construct an algorithm which allows certain photos to be featured at a time depending on what's trending at the moment.) </br>
+                - Date Posted </br>
+            </p>
+            <p class="article-content-about">
+                Overall there are three objects in this web app demo: User, Photo and Cart. If at any time you want to check out the database to get a better understanding of how these objects interact with each other, I've created a user with admin rights for you to check it out! </br>
+                </br>
+                Just click <a href="{% url 'admin:index' %}">HERE</a> and log in using:</br>
+                <b>User = shopify</b> </br>
+                <b>Password = Shopify123</b> </br>
+                (To return to the site, click "view site" at the top of the admin nav bar.)
+            </p>
+            <p class="article-content-about">
+                A user may also look at their profile and update their information (including a profile picture; a default picture is always provided). A user may also make updates to any Photo that they have listed, including de-listing it, changing the price, the name, the description, or removing the Photo altogether.
+            </p>
+            <p class-"article-content-about">
+                Finally, when a user is done shopping, they make check out by using the navigation to the cart page (using the nav bar at the top of the page) and then clicking "check out". (Note that in this demo, there is no function implemented for actually purchasing the Photo(s) in the user's cart. Checking out will just return the user's cart total and then clear the cart.)
+            </p>
         </div>
-    </article>
 {% endblock content %}

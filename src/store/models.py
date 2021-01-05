@@ -13,11 +13,11 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 # Create your models here.
 class Photo(models.Model):
     title           = models.CharField(max_length=100)
-    pic             = models.ImageField(blank=True, upload_to='')
+    pic             = models.ImageField(blank=True, upload_to='', verbose_name="Upload an image")
     thumbnail       = models.ImageField(blank=True, upload_to="thumbnails")
     price           = models.DecimalField(max_digits=1000, decimal_places=2, default=0.01)
     description     = models.TextField(max_length=2500)
-    available       = models.BooleanField(default=True)
+    available       = models.BooleanField(default=True, verbose_name="Leave this box checked to make your Photo available for purchase. You can always change this later.")
     featured        = models.BooleanField(default=False)
     date_posted     = models.DateTimeField(default = timezone.now)
     author          = models.ForeignKey(User, on_delete = models.CASCADE)

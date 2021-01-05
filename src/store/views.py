@@ -31,7 +31,7 @@ class PhotoListView(ListView): #class-based view
     '''
     context_object_name = 'photos' #this is how it's named in the home.html template
     ordering = ["-date_posted"] #allows us to post in reverse chronological order
-    paginate_by = 27
+    paginate_by = 30
 
 class PhotoFeaturedView(ListView): #class-based view
     model = Photo
@@ -45,10 +45,10 @@ class PhotoFeaturedView(ListView): #class-based view
 
 class PhotoDetailView(DetailView):
     model = Photo #Photo is the object that we call the view on
-
+    
 class PhotoCreateView(LoginRequiredMixin, CreateView):
     model = Photo
-    fields = ['title', 'pic', 'description', 'price']
+    fields = ['title', 'pic', 'description', 'price', 'available']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -58,7 +58,7 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
 
 class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Photo
-    fields = ['title', 'pic', 'description', 'price']
+    fields = ['title', 'pic', 'description', 'price', 'available']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -81,9 +81,6 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             #checks to make sure that a user can only update their own post
             return True
         return False
-
-class AddToCartView(DetailView):
-    model = Photo
 
 @login_required
 def add_to_cart(request, **kwargs):
@@ -109,6 +106,19 @@ def remove_from_cart(request, **kwargs):
         messages.success(request, f"Item was removed from your cart: {product.title}")
     else:
         messages.warning(request, f"Item was not found in your cart: {product.title}")
+    return HttpResponseRedirect(reverse('cart-view', args=[user]))
+
+@login_required
+def cart_purchase(request, **kwargs):
+    user = request.user
+    user_cart = Cart.objects.filter(user = user).first()
+    total = user_cart.get_cart_total()
+    messages.info(request, "In this demo version, the purchase function simply clears the cart! There is no transaction function actually involved.")
+    if user_cart.items.count() > 0:
+        user_cart.items.clear()
+        messages.success(request, f"Thank you for your purchase. Your total today was  {total}. We hope to see you soon!")
+    else:
+        messages.warning(request, f"Your cart is empty!")
     return HttpResponseRedirect(reverse('cart-view', args=[user]))
     
     
@@ -136,13 +146,9 @@ class CartItemsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
-        qs =  Cart.objects.filter(user = user)
-        photos_in_cart = []
-        total = 0
-        for c in qs:
-            for item in c.items.all():
-                photos_in_cart.append(item)
-                total += item.get_price()
+        qs =  Cart.objects.filter(user = user).first()
+        photos_in_cart = qs.get_cart_items()
+        total = qs.get_cart_total()
         print({'photos': photos_in_cart, 'price': total})
         return {'photos': photos_in_cart, 'price': total}
 

@@ -19,4 +19,5 @@
             </div>
         </article>
     {%endfor%}
+    <a href="{% url 'purchase' view.kwargs.username %}"><button class="btn btn-secondary">Check out!</button></a>
 {% endblock content %}
