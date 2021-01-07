@@ -44,6 +44,7 @@ class Photo(models.Model):
         super().save()
 
         th  = Image.open(self.pic.path)
+
         th.thumbnail((300,300))
 
         #if th.height > 300 or th.width > 300:
