@@ -45,6 +45,10 @@ class Photo(models.Model):
 
         th  = Image.open(self.pic.path)
 
+        ## add a line to make conversion from png to jpg if necessary
+        if th.mode in ("RGBA", "P"):
+            th = th.convert("RGB")
+
         th.thumbnail((300,300))
 
         #if th.height > 300 or th.width > 300:
