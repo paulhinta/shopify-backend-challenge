@@ -8,14 +8,22 @@
           <ul class="list-group">
             <li class="list-group-item list-group-item-light">
               <div><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></div>
-              <div><small>By: <a class="article-content" href="{% url 'user-photos' post.author %}">{{ post.author }}</a></small></div>
-              {% if post.available == False %}
-                <div><a class="article-content" href="{% url 'photo-details' post.id %}">Currently unavailable</a></div>
-              {% else %}
-                <div>Price: <a class="article-content" href="{% url 'photo-details' post.id %}">{{ post.price }}</a></div>
-              {%endif%}
+              <div>
+                  <a class="btn" data-toggle="collapse" href="#{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Details
+                  </a>
+              </div>
+              <div class="collapse" id="{{post.id}}">
+                  <div class="card card-body">
+                    <div><small>By: <a class="article-content" href="{% url 'user-photos' post.author %}">{{ post.author }}</a></small></div>
+                    {% if post.available == False %}
+                      <div><a class="article-content" href="{% url 'photo-details' post.id %}">Currently unavailable</a></div>
+                    {% else %}
+                      <div>Price: <a class="article-content" href="{% url 'photo-details' post.id %}">{{ post.price }}</a></div>
+                    {%endif%}
+                  </div>
+              </div>
             </li>
-            
           </ul>
         </div>
     {% endfor %}
