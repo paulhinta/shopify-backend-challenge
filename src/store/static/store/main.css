@@ -131,3 +131,7 @@ a.article-title:hover {
     float: none;
     width: 100%;
   }
+
+.block {
+  display: block;
+}

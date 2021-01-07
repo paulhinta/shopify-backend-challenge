@@ -1,6 +1,7 @@
 {% extends "store/base.html" %}
 {% block content %}
-    {% for post in photos %}
+    <div style="display: inline-block">
+      {% for post in photos %}
         <div class = "gallery" style="height: 300px; width:200px">
           <section class ="photo_gallery">
               <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
@@ -27,7 +28,9 @@
           </ul>
         </div>
     {% endfor %}
-    {% if is_paginated %}
+    </div>
+    <div style="display: inline-block;">
+      {% if is_paginated %}
 
       {% if page_obj.has_previous %}
         <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
@@ -48,4 +51,5 @@
       {% endif %}
 
     {% endif %}
+    </div>
 {% endblock content %}
