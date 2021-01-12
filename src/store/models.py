@@ -8,13 +8,14 @@ from django.core.files.base import ContentFile
 from io import BytesIO
 import os
 
+from django.core.files.storage import default_storage
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # Create your models here.
 class Photo(models.Model):
     title           = models.CharField(max_length=100)
     pic             = models.ImageField(blank=True, upload_to='', verbose_name="Upload an image")
-    thumbnail       = models.ImageField(blank=True, upload_to="thumbnails")
     price           = models.DecimalField(max_digits=1000, decimal_places=2, default=0.01)
     description     = models.TextField(max_length=2500)
     available       = models.BooleanField(default=True, verbose_name="Leave this box checked to make your Photo available for purchase. You can always change this later.")
@@ -40,24 +41,21 @@ class Photo(models.Model):
         Redirect does the work itself
         By using reverse, we are letting the view handle the redirect for us instead of the server
     '''
-    def save(self, *args, **kwargs): #overriding the save function in order to rescale images (save space, etc.)
-        super().save()
+    #def save(self, *args, **kwargs): #overriding the save function in order to rescale images (save space, etc.)
+    #    super().save()
 
-        th  = Image.open(self.pic.path)
+    #    th  = Image.open(self.pic.path)
 
         ## add a line to make conversion from png to jpg if necessary
-        if th.mode in ("RGBA", "P"):
-            th = th.convert("RGB")
+    #    if th.mode in ("RGBA", "P"):
+    #        th = th.convert("RGB")
 
-        th.thumbnail((300,300))
+    #    th.thumbnail((300,300))
 
-        #if th.height > 300 or th.width > 300:
-        #    th.thumbnail((300,300))
-
-        blob = BytesIO()
-        th.save(blob, 'JPEG')  
-        self.thumbnail.save(str(self.pic), ContentFile(blob.getvalue()), save=False) 
+    #    blob = BytesIO()
+    #    th.save(blob, 'JPEG')  
+    #    self.thumbnail.save(str(self.pic), ContentFile(blob.getvalue()), save=False) 
         
-        print(self.thumbnail)
+    #    print(self.thumbnail)
 
-        super(Photo, self).save(*args, **kwargs)
+    #    super(Photo, self).save(*args, **kwargs)

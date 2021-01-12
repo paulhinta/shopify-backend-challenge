@@ -52,7 +52,7 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.thumbnail = None
+        #form.instance.thumbnail = None
 
         return super().form_valid(form)
 

@@ -7,7 +7,7 @@
             <div class = "media-body">
                 <div style="float: left;">
                     <section class ="photo_gallery">
-                        <a href="{{ item.pic.url }}"><img src="{{ item.thumbnail.url }}"/></a>
+                        <a href="{{ item.pic.url }}"><img src="{{ item.pic.url }}"/></a>
                     </section>
                     <h5>{{item.title}} : </h5>
                     <h6><a href="{% url 'photo-details' item.id %}">See details</a></h6>
