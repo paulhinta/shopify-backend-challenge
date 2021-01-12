@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     ####### third party
     'crispy_forms',
+    'storages',
 
     ####### own
     'store.apps.StoreConfig',
@@ -135,4 +136,14 @@ LOGIN_URL = '/login/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #stored in file system, not in the database
 MEDIA_URL = '/media/' #where media will be located in the browser
 
-STATIC_URL = "/static/"
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+
+
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
