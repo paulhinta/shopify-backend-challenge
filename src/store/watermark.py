@@ -16,15 +16,12 @@ def watermark(name):
 
     tw = Image.open(BytesIO(file_byte_string))
 
-    if tw.mode in ("RGBA", "P"):
-        tw = tw.convert("RGB")
-
     tw.thumbnail((300,300))
     w, h = tw.size
 
     dr = ImageDraw.Draw(tw)
 
-    font = ImageFont.truetype("arial.ttf", 14)
+    font = ImageFont.load_default()
     text = "This is a sample photo."
 
     text_w, text_h = dr.textsize(text, font)
@@ -39,7 +36,7 @@ def watermark(name):
     tw.paste(c_text, pos, c_text)
 
     buffer = BytesIO()
-    tw.save(buffer, format='JPEG', quality=75)
+    tw.save(buffer, 'JPEG', quality=75)
 
     watermarked_image = buffer.getvalue()
 

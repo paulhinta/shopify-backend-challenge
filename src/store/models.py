@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from io import BytesIO
 import os
-from watermark import watermark
+from .watermark import watermark
 
 from django.core.files.storage import default_storage
 
@@ -31,6 +31,13 @@ class Photo(models.Model):
     def get_absolute_url(self):
         return reverse('photo-details', kwargs={'pk': self.pk})
 
+    '''
+        Get absolute URL allows user to be redirected to the post after creating a new one
+        Using reverse > redirect because reverse gives the browser a url as string and browser follows that route
+        Redirect does the work itself
+        By using reverse, we are letting the view handle the redirect for us instead of the server
+    '''
+
     def get_pic_name(self):
         return str(self.pic)
 
@@ -40,36 +47,26 @@ class Photo(models.Model):
     def get_id(self):
         return self.pk
 
-    '''
-        Get absolute URL allows user to be redirected to the post after creating a new one
-        Using reverse > redirect because reverse gives the browser a url as string and browser follows that route
-        Redirect does the work itself
-        By using reverse, we are letting the view handle the redirect for us instead of the server
-    '''
-    #def save(self, *args, **kwargs): #overriding the save function in order to rescale images (save space, etc.)
-    #    super().save()
-
-    #    th  = Image.open(self.pic.path)
-
-        ## add a line to make conversion from png to jpg if necessary
-    #    if th.mode in ("RGBA", "P"):
-    #        th = th.convert("RGB")
-
-    #    th.thumbnail((300,300))
-
-    #    blob = BytesIO()
-    #    th.save(blob, 'JPEG')  
-    #    self.thumbnail.save(str(self.pic), ContentFile(blob.getvalue()), save=False) 
-        
-    #    print(self.thumbnail)
-
-    #    super(Photo, self).save(*args, **kwargs)
-
     def save(self, *args, **kwargs):
         super().save()
 
         n = self.get_pic_name()
         watermarked = watermark(n)
 
-        self.thumbnail.save(str(self), ContentFile(watermarked), save=False)
+        self.thumbnail.save(str(self.pic), ContentFile(watermarked), save=False)
+
         super(Photo, self).save(*args, **kwargs)
+
+class Owners(models.Model):
+    pic    = models.OneToOneField(Photo, on_delete=models.CASCADE)
+    owners = models.ManyToManyField(User)
+
+    def get_items(self):
+        i = []
+        for item in self.owners.all():
+            i.append(item)
+        return i
+
+    def __str__(self):
+        name = str(self.pic) + "'s owners"
+        return name

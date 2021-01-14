@@ -6,7 +6,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #allows us to verify that user is logged in before creating or update a post; can't use a decorator on class-based views
 from members.models import Cart
+from store.models import Owners
 from django.contrib import messages
+from django.http.response import HttpResponseRedirect
 
 #to add watermark
 
@@ -113,9 +115,12 @@ def remove_from_cart(request, **kwargs):
 def cart_purchase(request, **kwargs):
     user = request.user
     user_cart = Cart.objects.filter(user = user).first()
+    user_obj = User.objects.filter(username=user).first()
     total = user_cart.get_cart_total()
     messages.info(request, "In this demo version, the purchase function simply clears the cart! There is no transaction function actually involved.")
     if user_cart.items.count() > 0:
+        for item in user_cart.get_cart_items():
+            item.owners.owners.add(user_obj)
         user_cart.items.clear()
         messages.success(request, f"Thank you for your purchase. Your total today was  {total}. We hope to see you soon!")
     else:
@@ -156,3 +161,15 @@ class CartItemsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 def about(request):
     return render(request, 'store/about.html', {})
+
+def check_owned_items(request):
+    user = request.user
+    owned_items = Owned_Photos.objects.filter(user = user).first()
+
+    items = []
+
+    for item in owned_items:
+        for i in item.get_items():
+            items.append(i)
+
+    return i
