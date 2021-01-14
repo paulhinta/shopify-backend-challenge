@@ -5,22 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #allows us to verify that user is logged in before creating or update a post; can't use a decorator on class-based views
-from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
 from members.models import Cart
 from django.contrib import messages
-from django.http.response import HttpResponseRedirect
-from django.http import FileResponse, HttpResponse
 
 #to add watermark
-import boto3
-from gallery.settings import AWS_STORAGE_BUCKET_NAME, AWS_SECRET_ACCESS_KEY
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
-from base64 import b64encode
-
-s3 = boto3.client('s3')
-bucket = AWS_STORAGE_BUCKET_NAME
 
 
 # Create your views here.
@@ -168,50 +156,3 @@ class CartItemsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 def about(request):
     return render(request, 'store/about.html', {})
-
-def return_watermark(request, pk):
-    photo = Photo.objects.filter(pk=pk).first()
-    n = photo.get_pic_name()
-    tit = n.rsplit(".")[0]
-
-    watermarked = watermark(n)
-
-    print("*"*10)
-    print(watermarked)
-    print("*"*10)
-
-    response = HttpResponse(watermarked, content_type="image/png")
-
-    return response
-
-def watermark(name):
-    file_byte_string = s3.get_object(Bucket=bucket, Key=name)['Body'].read()
-
-    tw = Image.open(BytesIO(file_byte_string))
-    w, h = tw.size
-
-    dr = ImageDraw.Draw(tw)
-
-    font = ImageFont.truetype("arial.ttf", 20)
-    text = "Please purchase this image"
-
-    text_w, text_h = dr.textsize(text, font)
-    pos = w - text_w, (h - text_h) - 50
-    c_text = Image.new('RGB', (text_w, (text_h)), color = '#000000')
-
-    dr = ImageDraw.Draw(c_text)
-    
-    dr.text((0,0), text, fill="#ffffff", font=font)
-    c_text.putalpha(100)
-   
-    tw.paste(c_text, pos, c_text)
-
-    buffer = BytesIO()
-    tw.save(buffer, format='JPEG', quality=75)
-
-    watermarked_image = buffer.getvalue()
-
-    print("99999999999")
-    print(watermarked_image)
-
-    return watermarked_image

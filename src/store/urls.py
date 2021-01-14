@@ -11,8 +11,7 @@ from .views import (
     CartItemsView,
     remove_from_cart,
     cart_purchase,
-    PhotoFeaturedView,
-    return_watermark
+    PhotoFeaturedView
 )
 
 urlpatterns = [
@@ -30,5 +29,4 @@ urlpatterns = [
     #expected name for the template is model_form.html
     path('photo/<int:pk>/update/', PhotoUpdateView.as_view(), name='photo-update'),
     path('photo/<int:pk>/delete/', PhotoDeleteView.as_view(), name='photo-delete'), #will ask for a confirmation form (template -> photo_confirm_delete
-    path('photo/<int:pk>/watermarked/', return_watermark, name='watermark'),
 ]

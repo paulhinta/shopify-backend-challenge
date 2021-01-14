@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from io import BytesIO
 import os
+from watermark import watermark
 
 from django.core.files.storage import default_storage
 
@@ -22,6 +23,7 @@ class Photo(models.Model):
     featured        = models.BooleanField(default=False)
     date_posted     = models.DateTimeField(default = timezone.now)
     author          = models.ForeignKey(User, on_delete = models.CASCADE)
+    thumbnail       = models.ImageField(blank=True, upload_to="thumbnail")
 
     def __str__(self):
         return self.title
@@ -62,3 +64,12 @@ class Photo(models.Model):
     #    print(self.thumbnail)
 
     #    super(Photo, self).save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        super().save()
+
+        n = self.get_pic_name()
+        watermarked = watermark(n)
+
+        self.thumbnail.save(str(self), ContentFile(watermarked), save=False)
+        super(Photo, self).save(*args, **kwargs)
