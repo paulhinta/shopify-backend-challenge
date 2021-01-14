@@ -46,6 +46,16 @@ class PhotoFeaturedView(ListView): #class-based view
     def get_queryset(self):
         return Photo.objects.filter(featured=True)
 
+class PhotoOwnedView(ListView):
+    model = Photo
+    template_name = 'store/owned.html'
+    context_object_name = 'owned'
+    ordering = ["-date_posted"] #allows us to post in reverse chronological order
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Photo.objects.all()
+
 class PhotoDetailView(DetailView):
     model = Photo #Photo is the object that we call the view on
     
@@ -91,8 +101,11 @@ def add_to_cart(request, **kwargs):
     product_id = kwargs['pk']
     product = Photo.objects.filter(id = product_id).first()
     user_cart = Cart.objects.filter(user = user).first()
+    user_obj = User.objects.filter(username=user).first()
     if user_cart.items.filter(title=product.title).exists():
         messages.warning(request, f"Could not add item to your cart, since {product.title} has already been added to the cart.")
+    elif user_obj in product.owners.owners.all():
+        messages.warning(request, f"Could not add item to your cart, since you have already purchased the Photo {product.title}. Please check your purchased photos for more details.")
     else:
         user_cart.items.add(product)
         messages.success(request, f"Item was added to your cart: {product.title}")

@@ -13,11 +13,13 @@ from .views import (
     cart_purchase,
     PhotoFeaturedView,
     check_owned_items,
+    PhotoOwnedView,
 )
 
 urlpatterns = [
     path('', PhotoListView.as_view(), name='store-home'),
     path('featured/', PhotoFeaturedView.as_view(), name='store-featured'),
+    path('purchased/', PhotoOwnedView.as_view(), name='member-owned'),
     path('user/<str:username>/', AllUserPostsView.as_view(), name='user-photos'),
     path('about/', about, name='about-page'),
     path('photo/<int:pk>/', PhotoDetailView.as_view(), name='photo-details'),

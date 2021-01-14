@@ -4,7 +4,13 @@
   <article class="media content-section">
       <div class = "gallery" style="float:left">
           <section class ="photo_gallery">
+            {% if object.author == user %}
+              <a href="{{ object.pic.url }}"><img src="{{ object.pic.url }}"/></a>
+            {% elif user in object.owners.owners.all %}
+              <a href="{{ object.pic.url }}"><img src="{{ object.pic.url }}"/></a>
+            {% else %}
               <a href="{{ object.thumbnail.url }}"><img src="{{ object.thumbnail.url }}"/></a>
+            {%endif%}
           </section>
       </div>
     <div class="media-body" style = "float:right">
@@ -25,9 +31,11 @@
         {% endif %}
         {% if object.author != user %}
           {% if object.available == True %}
-            <div>
-              <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' object.id %}">Add to Cart.</a>
-            </div>
+            {% if user not in object.owners.owners.all %}
+              <div>
+                <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' object.id %}">Add to Cart</a>
+              </div>
+            {% endif %}
           {% else %}
             <div>This Photo is currently unavailable for purchase. Please check again later.</div>
           {%endif%}

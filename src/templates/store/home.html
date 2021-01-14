@@ -16,6 +16,9 @@
             <li class="list-group-item list-group-item-light">
               <div><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></div>
               <div>
+                  {% if post.author != user and user not in post.owners.owners.all and post.available == True %}
+                    <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' post.id %}">+ Cart</a>
+                  {%endif%}
                   <a class="btn" data-toggle="collapse" href="#{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
                     Details
                   </a>
