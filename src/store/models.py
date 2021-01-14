@@ -15,8 +15,8 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 # Create your models here.
 class Photo(models.Model):
     title           = models.CharField(max_length=100)
-    pic             = models.ImageField(blank=True, upload_to='', verbose_name="Upload an image")
-    price           = models.DecimalField(max_digits=1000, decimal_places=2, default=0.01)
+    pic             = models.ImageField(upload_to='', verbose_name="Upload an image")
+    price           = models.DecimalField(max_digits=5, decimal_places=2, default=0.01)
     description     = models.TextField(max_length=2500)
     available       = models.BooleanField(default=True, verbose_name="Leave this box checked to make your Photo available for purchase. You can always change this later.")
     featured        = models.BooleanField(default=False)
@@ -28,6 +28,9 @@ class Photo(models.Model):
 
     def get_absolute_url(self):
         return reverse('photo-details', kwargs={'pk': self.pk})
+
+    def get_pic_name(self):
+        return str(self.pic)
 
     def get_price(self):
         return float(self.price)

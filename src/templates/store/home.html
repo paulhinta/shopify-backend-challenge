@@ -4,7 +4,7 @@
       {% for post in photos %}
         <div class = "gallery" style="height: 300px; width:200px">
           <section class ="photo_gallery">
-              <a href="{{ post.pic.url }}"><img src="{{ post.pic.url }}"/></a>
+              <a href="{{ post.pic.url }}"><img src="{% url 'watermark' pk=post.id %}"/></a>
           </section>
           <ul class="list-group">
             <li class="list-group-item list-group-item-light">
