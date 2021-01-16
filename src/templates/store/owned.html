@@ -6,7 +6,7 @@
             {% if request.user in post.owners.owners.all %}
                 <article class="media content-section">
                     <div class="media-body">
-                        <div class = "gallery">
+                        <div class = "gallery" style="height: 300px; width:200px">
                             <section class ="photo_gallery">
                                 <a href="{{ post.pic.url }}"><img src="{{ post.pic.url }}"/></a>
                             </section>

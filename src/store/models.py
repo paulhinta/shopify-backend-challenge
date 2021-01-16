@@ -9,6 +9,8 @@ from io import BytesIO
 import os
 from .watermark import watermark
 
+from django.core.validators import MinValueValidator
+
 from django.core.files.storage import default_storage
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -17,7 +19,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 class Photo(models.Model):
     title           = models.CharField(max_length=100)
     pic             = models.ImageField(upload_to='', verbose_name="Upload an image")
-    price           = models.DecimalField(max_digits=5, decimal_places=2, default=0.01)
+    price           = models.DecimalField(max_digits=5, decimal_places=2, default=0.01, validators=[MinValueValidator(0.0)])
     description     = models.TextField(max_length=2500)
     available       = models.BooleanField(default=True, verbose_name="Leave this box checked to make your Photo available for purchase. You can always change this later.")
     featured        = models.BooleanField(default=False)
@@ -54,6 +56,9 @@ class Photo(models.Model):
         watermarked = watermark(n)
 
         self.thumbnail.save(str(self.pic), ContentFile(watermarked), save=False)
+
+        if self.price < 0:
+            self.price = 0.00
 
         super(Photo, self).save(*args, **kwargs)
 

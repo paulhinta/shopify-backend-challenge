@@ -15,6 +15,9 @@ def watermark(name):
     file_byte_string = s3.get_object(Bucket=bucket, Key=name)['Body'].read()
 
     tw = Image.open(BytesIO(file_byte_string))
+    
+    if not tw.mode == 'RGB':
+        tw = tw.convert('RGB')
 
     tw.thumbnail((300,300))
     w, h = tw.size

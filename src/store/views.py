@@ -65,6 +65,8 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        if form.instance.price < 0:
+            form.instance.price = 0
         #form.instance.thumbnail = None
 
         return super().form_valid(form)
