@@ -5,10 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #allows us to verify that user is logged in before creating or update a post; can't use a decorator on class-based views
-from PIL import Image
 from members.models import Cart
+from store.models import Owners
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
+
+#to add watermark
+
 
 # Create your views here.
 def home(request):
@@ -43,6 +46,16 @@ class PhotoFeaturedView(ListView): #class-based view
     def get_queryset(self):
         return Photo.objects.filter(featured=True)
 
+class PhotoOwnedView(ListView):
+    model = Photo
+    template_name = 'store/owned.html'
+    context_object_name = 'owned'
+    ordering = ["-date_posted"] #allows us to post in reverse chronological order
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Photo.objects.all()
+
 class PhotoDetailView(DetailView):
     model = Photo #Photo is the object that we call the view on
     
@@ -52,7 +65,9 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.thumbnail = None
+        if form.instance.price < 0:
+            form.instance.price = 0
+        #form.instance.thumbnail = None
 
         return super().form_valid(form)
 
@@ -88,8 +103,11 @@ def add_to_cart(request, **kwargs):
     product_id = kwargs['pk']
     product = Photo.objects.filter(id = product_id).first()
     user_cart = Cart.objects.filter(user = user).first()
+    user_obj = User.objects.filter(username=user).first()
     if user_cart.items.filter(title=product.title).exists():
         messages.warning(request, f"Could not add item to your cart, since {product.title} has already been added to the cart.")
+    elif user_obj in product.owners.owners.all():
+        messages.warning(request, f"Could not add item to your cart, since you have already purchased the Photo {product.title}. Please check your purchased photos for more details.")
     else:
         user_cart.items.add(product)
         messages.success(request, f"Item was added to your cart: {product.title}")
@@ -112,9 +130,12 @@ def remove_from_cart(request, **kwargs):
 def cart_purchase(request, **kwargs):
     user = request.user
     user_cart = Cart.objects.filter(user = user).first()
+    user_obj = User.objects.filter(username=user).first()
     total = user_cart.get_cart_total()
     messages.info(request, "In this demo version, the purchase function simply clears the cart! There is no transaction function actually involved.")
     if user_cart.items.count() > 0:
+        for item in user_cart.get_cart_items():
+            item.owners.owners.add(user_obj)
         user_cart.items.clear()
         messages.success(request, f"Thank you for your purchase. Your total today was  {total}. We hope to see you soon!")
     else:
@@ -155,3 +176,15 @@ class CartItemsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 def about(request):
     return render(request, 'store/about.html', {})
+
+def check_owned_items(request):
+    user = request.user
+    owned_items = Owned_Photos.objects.filter(user = user).first()
+
+    items = []
+
+    for item in owned_items:
+        for i in item.get_items():
+            items.append(i)
+
+    return i

@@ -6,9 +6,15 @@
             {% if post.featured %}
                 <article class="media content-section">
                     <div class="media-body">
-                        <div class = "gallery">
+                        <div class = "gallery" style="height: 300px; width:200px">
                             <section class ="photo_gallery">
-                                <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+                                {% if post.author == user %}
+                                    <a href="{{ post.pic.url }}"><img src="{{ post.pic.url }}"/></a>
+                                {% elif user in post.owners.owners.all %}
+                                    <a href="{{ post.pic.url }}"><img src="{{ post.pic.url }}"/></a>
+                                {% else %}
+                                    <a href="{{ post.thumbnail.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+                                {%endif%}
                             </section>
                         </div>
                         <div>

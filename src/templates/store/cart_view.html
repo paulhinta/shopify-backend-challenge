@@ -7,7 +7,13 @@
             <div class = "media-body">
                 <div style="float: left;">
                     <section class ="photo_gallery">
-                        <a href="{{ item.pic.url }}"><img src="{{ item.thumbnail.url }}"/></a>
+                        {% if item.author == user %}
+                            <a href="{{ item.pic.url }}"><img src="{{ item.pic.url }}"/></a>
+                        {% elif user in item.owners.owners.all %}
+                            <a href="{{ item.pic.url }}"><img src="{{ item.pic.url }}"/></a>
+                        {% else %}
+                            <a href="{{ item.thumbnail.url }}"><img src="{{ item.thumbnail.url }}"/></a>
+                        {%endif%}
                     </section>
                     <h5>{{item.title}} : </h5>
                     <h6><a href="{% url 'photo-details' item.id %}">See details</a></h6>

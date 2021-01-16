@@ -4,12 +4,24 @@
       {% for post in photos %}
         <div class = "gallery" style="height: 300px; width:200px">
           <section class ="photo_gallery">
-              <a href="{{ post.pic.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+              {% if post.author == user %}
+                <a href="{{ post.pic.url }}"><img src="{{ post.pic.url }}"/></a>
+              {% elif user in post.owners.owners.all %}
+                <a href="{{ post.pic.url }}"><img src="{{ post.pic.url }}"/></a>
+              {% else %}
+                <a href="{{ post.thumbnail.url }}"><img src="{{ post.thumbnail.url }}"/></a>
+              {%endif%}
           </section>
           <ul class="list-group">
             <li class="list-group-item list-group-item-light">
               <div><a class="article-title" href="{% url 'photo-details' post.id %}">{{ post.title }}</a></div>
               <div>
+                  {% if post.author == user %}
+                    <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-update' post.id %}">Update</a>
+                  {%endif%}
+                  {% if post.author != user and user not in post.owners.owners.all and post.available == True %}
+                    <a class = "btn btn-secondary btn-sm" href = "{% url 'photo-add-to-cart' post.id %}">+ Cart</a>
+                  {%endif%}
                   <a class="btn" data-toggle="collapse" href="#{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
                     Details
                   </a>
@@ -27,7 +39,7 @@
             </li>
           </ul>
         </div>
-    {% endfor %}
+      {% endfor %}
     </div>
     <div style="display: inline-block;">
       {% if is_paginated %}
