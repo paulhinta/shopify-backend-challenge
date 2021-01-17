@@ -5,37 +5,32 @@
         <div class="article-metadata card card-body">
             <h3>Instructions</h3>
             <p class="article-content">
-                Hello Shopify team! Thank you for taking the time to review my submission for the backend developer intern role. I'm very excited for you to evaluate my work!
-            </p>
-            <p class="article content-about">
-                On this page I've provided instructions on how this web app works. This app functions as a photo repository as well as a simple marketplace for photos (users can upload and sell pictures). I chose to use the Django framework in Python because I figured that it has a lot of plugins available which would reduce the lines of code in the backend, as well as the fact that I wasn't too comfortable with this framework when I started and I wanted to practice! (Also please note that I spent most of my efforts on the backend because of the job description, I don't have too much experience in UI/UX but I plan on getting there!)
-            </p>
-            <p class="article-content-about">
-                To get started, you can create a username and password (email is required). Then, you can navigate to the home page, where you will see displayed in a 3x10 grid all of the photos on the site, in reverse chronological order. At any point, you can click the photo name to view details of the photo, or click the username of the user who uploaded the photo to view all photos that that user has uploaded.
-            </p>
-            <p class="article-content-about">
+                Hello Shopify team! Thank you for taking the time to review my submission for the backend developer intern role. I'm very excited for you to evaluate my work! </br>
+                On this page I've provided instructions on how this web app works. This app functions as a photo repository as well as a simple marketplace for photos (users can upload and sell pictures). I chose to use the Django framework in Python because I figured that it has a lot of plugins available which would reduce the lines of code in the backend, as well as the fact that I wasn't too comfortable with this framework when I started and I wanted to practice! (Also please note that I spent most of my efforts on the backend because of the job description, I don't have too much experience in UI/UX but I plan on getting there!) </br>
                 Each upload is an instance of the django model "Photo", which can be found under "src/store/models.py". You'll notice that a Photo will have many attributes: </br>
                 - Title </br>
                 - Author (which is the user who uploaded the photo) </br>
+                - Pic (which contains the photo data of the object) </br>
                 - Price </br>
                 - Description </br>
                 - Available (which indicates whether or not the Photo is currently listed for purchase) </br>
-                - Featured (which indicates whether the site has decided to feature the Photo on the featured page. In a complete version, the site would construct an algorithm which allows certain photos to be featured at a time depending on what's trending at the moment.) </br>
+                - Featured (which indicates whether the site has decided to feature the Photo on the featured page. In a complete version, the site would construct an algorithm which allows certain photos to be featured; for instance, this algorithm could sort them by what's trending at the moment.) </br>
                 - Date Posted </br>
-            </p>
-            <p class="article-content-about">
-                Overall there are four objects in this web app demo: User, Profile (user's profile picture), Photo and Cart. If at any time you want to check out the database to get a better understanding of how these objects interact with each other, I've created a user with admin rights for you to check it out! </br>
-                </br>
-                Just click <a href="{% url 'admin:index' %}">HERE</a> and log in using:</br>
-                <b>User = shopify</b> </br>
-                <b>Password = Shopify123</b> </br>
-                (To return to the site, click "view site" at the top of the admin nav bar.)
-            </p>
-            <p class="article-content-about">
-                A user may also look at their profile and update their information (including a profile picture; a default picture is always provided). A user may also make updates to any Photo that they have listed, including de-listing it, changing the price, the name, the description, or removing the Photo altogether.
-            </p>
-            <p class-"article-content-about">
-                Finally, when a user is done shopping, they make check out by using the navigation to the cart page (using the nav bar at the top of the page) and then clicking "check out". (Note that in this demo, there is no function implemented for actually purchasing the Photo(s) in the user's cart. Checking out will just return the user's cart total and then clear the cart.)
+                - Thumbnail (which contains a lower resolution rendering of the Pic attribute, as well as the words 'This is a sample photo' written in the bottom-right corner) </br>                
+The Photos are stored in an AWS S3 bucket. However, in order to be able to display the photos on the website (for buying-selling purposes), the bucket's content must be accessible from outside sources (i.e. the Heroku app must be able to access the photos and display them in the browser); this means that the bucket itself is not publically accessible, but the photos inside it are (at least this is my understanding of it, this was my first time trying out AWS!).</br>
+To give an example of this, if you try to access the <a href="https://s3.console.aws.amazon.com/s3/buckets/paulhinta-shopify-backend-2021">S3 bucket itself</a>, you will be redirected to sign into your AWS account (and you won't have access to it, since you aren't authorized to see the bucket), but you can access a <a href="https://paulhinta-shopify-backend-2021.s3.ca-central-1.amazonaws.com/Room_25.jpg">photo's 'pic' attribute</a> from this bucket without being authenticated.</br>
+This brings up a challenge: if anyone can access any photo on the web app, then what's to stop them from downloading the picture without purchasing it first? To solve this, each Photo object is in a one-to-one relationship with another model called 'Owners'. This allows us to track which Photo(s) has been purchased by which User(s). Then, if a user is not authenticated, or a certain Photo object is not owned by that user, the html template automatically returns the <a href="https://paulhinta-shopify-backend-2021.s3.ca-central-1.amazonaws.com/thumbnail/Room_25.jpg">photo item's 'thumbnail' attribute instead.</a></br>
+Overall there are five objects in this web app demo: User, Profile (user's profile picture), Photo, Owners, and Cart. If at any time you want to check out the database to get a better understanding of how these objects interact with each other, I've created a user with admin rights for you to check it out! </br>
+You can access this page <a href="https://paulhinta-shopify-backend-2021.herokuapp.com/admin/">here</a> and log in with the following credentials: </br>
+<b>User = "Shopify"</b>
+<b>Pass = "Shopify123"</b></br>
+A user may also look at their profile and update their information (including a profile picture; a default picture (Pikachu) is always provided). A user may also make updates to any Photo that they have listed, including de-listing it, changing the price, the name, the description, or removing the Photo altogether. </br>
+Finally, when a user is done shopping, they make check out by using the navigation to the cart page (using the nav bar at the top of the page) and then clicking "check out". (Note that in this demo, there is no function implemented for actually purchasing the Photo(s) in the user's cart. Checking out will just return the user's cart total and then clear the cart.) Then, all photos purchased by them will be available for viewing on the side navigation bar (under 'Photos you have purchased'). </br>
+This app is currently populated by photos that my friends have uploaded, I asked for their help in testing the app! Feel free to create a new user or to use the Shopify account to add more photos. </br>
+And that's it! Hopefully you enjoy this app as much as I enjoyed developing it. </br>
+One last thing: I understand that based on my resume and experiences, I'm not the most qualified person for this position! However, I would still really, really appreciate any feedback on my work :) I understand that it might be hard for y'all to give me detailed feedback since I'd imagine you are all quite busy, but anything is appreciated. </br>
+Thank you very much and I look forward to hearing from you!</br>
+-Paul
             </p>
         </div>
 {% endblock content %}
